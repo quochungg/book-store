@@ -1,40 +1,31 @@
 package com.prm.bookstore.UI.register;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.prm.bookstore.API.ApiService;
-import com.prm.bookstore.Models.request.RegisterRequest;
 import com.prm.bookstore.Models.response.RegisterResponse;
 import com.prm.bookstore.R;
 import com.prm.bookstore.UI.login.LoginActivity;
 import com.prm.bookstore.API.ApiClient;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private EditText etUserName, etPassword, etEmail, etPhoneNumber, etAvatarUrl;
-    private RadioGroup rgRole;
-    private RadioButton rbCustomer, rbAdmin;
+    private EditText etUserName, etPassword, etEmail, etPhoneNumber;
     private Button btnRegister;
-    private ImageView imgAvatar;
-    private Uri avatarUri = null;
-    private ActivityResultLauncher<Intent> pickImageLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,28 +36,9 @@ public class RegisterActivity extends AppCompatActivity {
         etPassword = findViewById(R.id.etPassword);
         etEmail = findViewById(R.id.etEmail);
         etPhoneNumber = findViewById(R.id.etPhoneNumber);
-        rgRole = findViewById(R.id.rgRole);
-        rbCustomer = findViewById(R.id.rbCustomer);
-        rbAdmin = findViewById(R.id.rbAdmin);
         btnRegister = findViewById(R.id.btnRegister);
-        imgAvatar = findViewById(R.id.imgAvatar);
 
-        pickImageLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        avatarUri = result.getData().getData();
-                        imgAvatar.setImageURI(avatarUri);
-                    }
-                });
-
-        imgAvatar.setOnClickListener(v -> openGallery());
         btnRegister.setOnClickListener(v -> handleRegister());
-    }
-
-    private void openGallery() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        pickImageLauncher.launch(intent);
     }
 
     private void handleRegister() {
@@ -74,41 +46,72 @@ public class RegisterActivity extends AppCompatActivity {
         String password = etPassword.getText().toString().trim();
         String email = etEmail.getText().toString().trim();
         String phoneNumber = etPhoneNumber.getText().toString().trim();
-        String avatarImgUrl = etAvatarUrl.getText().toString().trim();  // Người dùng nhập URL ảnh hoặc sau khi upload
-        int roleID = rbCustomer.isChecked() ? 1 : 2;
+        int roleID = 1; // Mặc định Customer
 
         if (userName.isEmpty() || password.isEmpty() || email.isEmpty()) {
             Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin!", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        RegisterRequest request = new RegisterRequest(
-                userName,
-                password,
-                email,
-                phoneNumber.isEmpty() ? null : phoneNumber,
-                avatarImgUrl.isEmpty() ? null : avatarUri,
-                roleID
+        // Tạo RequestBody
+        RequestBody userNameBody = RequestBody.create(MediaType.parse("text/plain"), userName);
+        RequestBody passwordBody = RequestBody.create(MediaType.parse("text/plain"), password);
+        RequestBody emailBody = RequestBody.create(MediaType.parse("text/plain"), email);
+        RequestBody phoneBody = RequestBody.create(MediaType.parse("text/plain"), phoneNumber.isEmpty() ? "" : phoneNumber);
+        RequestBody roleIDBody = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(roleID));
+
+        // Tạo file rỗng cho AvatarImg
+        MultipartBody.Part avatarImgPart = MultipartBody.Part.createFormData(
+                "AvatarImg",
+                "empty.png",
+                RequestBody.create(MediaType.parse("application/octet-stream"), new byte[0])
         );
 
         ApiService apiService = ApiClient.getAnonymousClient().create(ApiService.class);
-        Call<RegisterResponse> call = apiService.register(request);
+        Call<RegisterResponse> call = apiService.register(
+                userNameBody,
+                passwordBody,
+                emailBody,
+                phoneBody,
+                avatarImgPart,
+                roleIDBody
+        );
 
         call.enqueue(new Callback<RegisterResponse>() {
             @Override
             public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    Toast.makeText(RegisterActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                    finish();
+                Log.d("DEBUG", "HTTP Code: " + response.code());
+                if (response.isSuccessful()) {
+                    RegisterResponse res = response.body();
+                    if (res != null) {
+                        Log.d("DEBUG", "Success: " + res.isSuccess() + ", Message: " + res.getMessage());
+                        if (res.isSuccess()) {
+                            Toast.makeText(RegisterActivity.this, res.getMessage() != null ? res.getMessage() : "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                            finish();
+                        } else {
+                            Toast.makeText(RegisterActivity.this, res.getMessage() != null ? res.getMessage() : "Đăng ký thất bại!", Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Toast.makeText(RegisterActivity.this, "Lỗi: server trả về dữ liệu rỗng!", Toast.LENGTH_LONG).show();
+                    }
                 } else {
-                    Toast.makeText(RegisterActivity.this, "Đăng ký thất bại!", Toast.LENGTH_SHORT).show();
+                    String errorMsg = "Đăng ký thất bại! Mã lỗi: " + response.code();
+                    if (response.errorBody() != null) {
+                        try {
+                            errorMsg = response.errorBody().string();
+                        } catch (Exception e) {
+                            Log.e("DEBUG", "Error parsing errorBody", e);
+                        }
+                    }
+                    Toast.makeText(RegisterActivity.this, errorMsg, Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<RegisterResponse> call, Throwable t) {
-                Toast.makeText(RegisterActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                Log.e("DEBUG", "onFailure", t);
             }
         });
     }

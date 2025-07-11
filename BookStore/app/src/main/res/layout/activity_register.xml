@@ -61,33 +61,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <!-- RadioGroup Role -->
-        <RadioGroup
-            android:id="@+id/rgRole"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-
-            <RadioButton
-                android:id="@+id/rbCustomer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Customer"
-                android:textColor="@android:color/white"
-                android:buttonTint="@android:color/white"
-                android:layout_marginEnd="16dp" />
-
-            <RadioButton
-                android:id="@+id/rbAdmin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Admin"
-                android:textColor="@android:color/white"
-                android:buttonTint="@android:color/white" />
-
-        </RadioGroup>
-
         <Button
             android:id="@+id/btnRegister"
             android:text="Register"

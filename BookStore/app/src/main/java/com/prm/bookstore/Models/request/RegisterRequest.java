@@ -2,25 +2,27 @@ package com.prm.bookstore.Models.request;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.net.Uri;
+
+import com.google.gson.annotations.SerializedName;
 
 public class RegisterRequest {
-
+    @SerializedName("UserName")
     @NonNull
     private String userName;
 
+    @SerializedName("Password")
     @NonNull
     private String password;
 
+    @SerializedName("Email")
     @NonNull
     private String email;
 
+    @SerializedName("PhoneNumber")
     @Nullable
     private String phoneNumber;
 
-    @Nullable
-    private Uri avatarImgUri; // Thay cho IFormFile, dùng Uri để chọn file ảnh trên Android
-
+    @SerializedName("RoleID")
     private int roleID;
 
     // Constructor mặc định
@@ -28,12 +30,11 @@ public class RegisterRequest {
 
     // Constructor đầy đủ
     public RegisterRequest(@NonNull String userName, @NonNull String password, @NonNull String email,
-                                  @Nullable String phoneNumber, @Nullable Uri avatarImgUri, int roleID) {
+                                  @Nullable String phoneNumber, int roleID) {
         this.userName = userName;
         this.password = password;
         this.email = email;
         this.phoneNumber = phoneNumber;
-        this.avatarImgUri = avatarImgUri;
         this.roleID = roleID;
     }
 
@@ -72,15 +73,6 @@ public class RegisterRequest {
 
     public void setPhoneNumber(@Nullable String phoneNumber) {
         this.phoneNumber = phoneNumber;
-    }
-
-    @Nullable
-    public Uri getAvatarImgUri() {
-        return avatarImgUri;
-    }
-
-    public void setAvatarImgUri(@Nullable Uri avatarImgUri) {
-        this.avatarImgUri = avatarImgUri;
     }
 
     public int getRoleID() {

@@ -2,6 +2,7 @@ package com.prm.bookstore.UI.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -59,9 +60,12 @@ public class LoginActivity extends AppCompatActivity {
         ApiService apiService = ApiClient.getAnonymousClient().create(ApiService.class);
         Call<LoginResponse> call = apiService.login(loginRequest);
 
+        Log.d("LoginActivity", "Sending login request: " + loginRequest);
+
         call.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                Log.d("LoginActivity", "Response received: " + response);
                 if (response.isSuccessful() && response.body() != null) {
                     LoginResponse data = response.body();
                     Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
@@ -77,6 +81,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
+                Log.e("LoginActivity", "Login failed: " + t.getMessage());
                 Toast.makeText(LoginActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
