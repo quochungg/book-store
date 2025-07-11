@@ -2,13 +2,40 @@ package com.prm.bookstore.UI.Home;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.prm.bookstore.R;
+import com.prm.bookstore.UI.Home.CartFragment;
+import com.prm.bookstore.UI.Home.ChatFragment;
+import com.prm.bookstore.UI.Home.ProfileFragment;
+import com.prm.bookstore.UI.Home.HomeFragment;
 
 public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            Fragment selectedFragment = null;
+            int itemId = item.getItemId();
+            if (itemId == R.id.nav_cart) {
+                selectedFragment = new CartFragment();
+            } else if (itemId == R.id.nav_chat) {
+                selectedFragment = new ChatFragment();
+            } else if (itemId == R.id.nav_profile) {
+                selectedFragment = new ProfileFragment();
+            } else {
+                selectedFragment = new HomeFragment();
+            }
+            getSupportFragmentManager().beginTransaction()
+                .replace(R.id.home_fragment_container, selectedFragment)
+                .commit();
+            return true;
+        });
+        // Set default fragment
+        bottomNavigationView.setSelectedItemId(R.id.nav_home);
     }
 }
