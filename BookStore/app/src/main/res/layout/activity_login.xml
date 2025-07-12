@@ -56,7 +56,8 @@
             android:textStyle="bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="16dp"
+            android:contentDescription="Login Button" />
 
         <TextView
             android:text="Don't have an account?"
@@ -64,7 +65,8 @@
             android:textSize="14sp"
             android:layout_marginTop="16dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:contentDescription="Prompt for account creation" />
 
         <TextView
             android:id="@+id/tvSignUp"
@@ -78,7 +80,9 @@
             android:layout_height="wrap_content"
             android:minHeight="48dp"
             android:clickable="true"
-            android:focusable="true" />
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="Create Account Button" />
 
     </LinearLayout>
 </ScrollView>

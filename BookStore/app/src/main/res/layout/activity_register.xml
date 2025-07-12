@@ -1,4 +1,5 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#8CA1D1"
@@ -17,59 +18,97 @@
             android:layout_height="120dp"
             android:layout_marginBottom="16dp"
             android:contentDescription="a"
-            android:background="@drawable/rounded_edittext"
+            android:background="@drawable/rounded_image"
             android:scaleType="centerCrop"
             android:clickable="true"
             android:focusable="true" />
 
-        <EditText
-            android:id="@+id/etUserName"
-            android:hint="User Name"
-            android:background="@drawable/rounded_edittext"
-            android:padding="12dp"
-            android:layout_marginBottom="12dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <EditText
-            android:id="@+id/etEmail"
-            android:hint="E-Mail"
-            android:inputType="textEmailAddress"
-            android:background="@drawable/rounded_edittext"
-            android:padding="12dp"
-            android:layout_marginBottom="12dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <EditText
-            android:id="@+id/etPassword"
-            android:hint="Password"
-            android:inputType="textPassword"
-            android:background="@drawable/rounded_edittext"
-            android:padding="12dp"
-            android:layout_marginBottom="12dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <EditText
-            android:id="@+id/etPhoneNumber"
-            android:hint="Phone Number (Optional)"
-            android:inputType="phone"
-            android:background="@drawable/rounded_edittext"
-            android:padding="12dp"
-            android:layout_marginBottom="12dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:id="@+id/btnRegister"
-            android:text="Register"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:backgroundTint="#5A69AF"
-            android:textColor="@android:color/white"
-            android:textStyle="bold" />
+            android:layout_marginBottom="12dp"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusTopStart="16dp"
+            app:boxCornerRadiusTopEnd="16dp"
+            app:boxCornerRadiusBottomStart="16dp"
+            app:boxCornerRadiusBottomEnd="16dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etUserName"
+                android:hint="User Name"
+                android:background="@android:color/transparent"
+                android:padding="12dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusTopStart="16dp"
+            app:boxCornerRadiusTopEnd="16dp"
+            app:boxCornerRadiusBottomStart="16dp"
+            app:boxCornerRadiusBottomEnd="16dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etEmail"
+                android:hint="E-Mail"
+                android:inputType="textEmailAddress"
+                android:background="@android:color/transparent"
+                android:padding="12dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusTopStart="16dp"
+            app:boxCornerRadiusTopEnd="16dp"
+            app:boxCornerRadiusBottomStart="16dp"
+            app:boxCornerRadiusBottomEnd="16dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etPassword"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:background="@android:color/transparent"
+                android:padding="12dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusTopStart="16dp"
+            app:boxCornerRadiusTopEnd="16dp"
+            app:boxCornerRadiusBottomStart="16dp"
+            app:boxCornerRadiusBottomEnd="16dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etPhoneNumber"
+                android:hint="Phone Number (Optional)"
+                android:inputType="phone"
+                android:background="@android:color/transparent"
+                android:padding="12dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRegister"
+            android:text="Register"
+            style="@style/Widget.MaterialComponents.Button"
+            android:backgroundTint="@color/md_theme_light_primary"
+            android:textColor="@color/md_theme_light_onPrimary"
+            android:textStyle="bold"
+            app:cornerRadius="24dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp" />
 
     </LinearLayout>
 </ScrollView>

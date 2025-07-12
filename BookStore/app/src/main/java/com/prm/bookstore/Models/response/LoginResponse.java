@@ -1,28 +1,19 @@
 package com.prm.bookstore.Models.response;
 
 import com.google.gson.annotations.SerializedName;
-import com.prm.bookstore.Models.User.UserResponse;
 
 public class LoginResponse {
-    @SerializedName("token")
-    private String accessToken;  // JWT Token trả về từ API
-    private UserResponse userResponse;  // Thông tin người dùng
+    @SerializedName("success")
+    private boolean success;
+    @SerializedName("message")
+    private String message;
+    @SerializedName("data")
+    private LoginResult data;
 
-    public LoginResponse(String accessToken, UserResponse userResponse) {
-        this.accessToken = accessToken;
-        this.userResponse = userResponse;
-    }
-
-    public String getAccessToken() {
-        return accessToken;
-    }
-    public void setToken(String token) {
-        this.accessToken = token;
-    }
-    public UserResponse getUserResponse() {
-        return userResponse;
-    }
-    public void setUserResponse(UserResponse userResponse) {
-        this.userResponse = userResponse;
-    }
+    public boolean isSuccess() { return success; }
+    public String getMessage() { return message; }
+    public LoginResult getData() { return data; }
+    public void setSuccess(boolean success) { this.success = success; }
+    public void setMessage(String message) { this.message = message; }
+    public void setData(LoginResult data) { this.data = data; }
 }

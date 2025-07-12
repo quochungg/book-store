@@ -6,11 +6,13 @@ import com.prm.bookstore.Models.response.LoginResponse;
 import com.prm.bookstore.Models.response.RegisterResponse;
 import com.prm.bookstore.Models.request.LoginRequest;
 import com.prm.bookstore.Models.Book.Book;
+import com.prm.bookstore.Models.request.AddToCartRequest;
 
 import java.util.List;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -47,4 +49,10 @@ public interface ApiService {
 
     @GET("/api/Book/GetBookById")
     Call<Book> getBookById(@Query("id") int id);
+
+    @POST("/api/Cart/AddBookToCart")
+    Call<ResponseBody> addBookToCart(@Body AddToCartRequest request);
+
+    @GET("/api/Cart/GetUserCart")
+    Call<com.prm.bookstore.Models.response.CartViewModel> getUserCart();
 }

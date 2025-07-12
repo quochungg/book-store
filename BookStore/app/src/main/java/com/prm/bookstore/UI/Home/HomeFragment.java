@@ -17,11 +17,15 @@ public class HomeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Hiển thị BookListFragment thay vì TextView
+        // Lấy token từ arguments của HomeFragment
+        String token = getArguments() != null ? getArguments().getString("token") : null;
+        BookListFragment bookListFragment = new BookListFragment();
+        Bundle args = new Bundle();
+        args.putString("token", token);
+        bookListFragment.setArguments(args);
         FragmentTransaction ft = requireActivity().getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.home_fragment_container, new BookListFragment());
+        ft.replace(R.id.home_fragment_container, bookListFragment);
         ft.commit();
         return new View(getContext()); // Trả về view rỗng vì fragment con sẽ thay thế
     }
 }
-

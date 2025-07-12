@@ -1,6 +1,7 @@
 package com.prm.bookstore.UI.login;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -68,12 +69,16 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d("LoginActivity", "Response received: " + response);
                 if (response.isSuccessful() && response.body() != null) {
                     LoginResponse data = response.body();
+                    String token = data.getData() != null ? data.getData().getToken() : null;
+                    // Lưu token vào SharedPreferences
+                    SharedPreferences prefs = getSharedPreferences("user_prefs", MODE_PRIVATE);
+                    prefs.edit().putString("token", token).apply();
                     Toast.makeText(LoginActivity.this, "Đăng nhập thành công!", Toast.LENGTH_SHORT).show();
-
                     Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                    intent.putExtra("token", data.getAccessToken());
+                    intent.putExtra("token", token);
                     intent.putExtra("storeId", "c7dd2b3e-1e7c-49c4-ced5-08ddc07ce11b"); // Đúng ID admin
-                    intent.putExtra("userId", data.getUserResponse() != null ? data.getUserResponse().getId() : "");
+                    intent.putExtra("userId", data.getData() != null ? data.getData().getId() : "");
+                    Log.d("LoginActivity", "Token put to Intent: " + (data.getData() != null ? data.getData().getToken() : null));
                     startActivity(intent);
                     finish();
                 } else {

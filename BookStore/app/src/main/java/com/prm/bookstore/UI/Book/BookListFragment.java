@@ -58,8 +58,9 @@ public class BookListFragment extends Fragment {
     }
 
     private void onBookClick(Book book) {
-        // Chuyển sang BookDetailFragment
-        Fragment detailFragment = BookDetailFragment.newInstance(book.getId());
+        // Lấy token từ arguments của Fragment
+        String token = getArguments() != null ? getArguments().getString("token") : null;
+        Fragment detailFragment = BookDetailFragment.newInstance(book.getId(), token);
         requireActivity().getSupportFragmentManager().beginTransaction()
             .replace(R.id.home_fragment_container, detailFragment)
             .addToBackStack(null)

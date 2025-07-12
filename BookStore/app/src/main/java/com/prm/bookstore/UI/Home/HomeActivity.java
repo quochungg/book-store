@@ -22,7 +22,13 @@ public class HomeActivity extends AppCompatActivity {
             Fragment selectedFragment = null;
             int itemId = item.getItemId();
             if (itemId == R.id.nav_cart) {
-                selectedFragment = new CartFragment();
+                String token = getIntent().getStringExtra("token");
+                android.util.Log.d("HomeActivity", "Token in HomeActivity: " + token);
+                CartFragment cartFragment = new CartFragment();
+                Bundle args = new Bundle();
+                args.putString("token", token);
+                cartFragment.setArguments(args);
+                selectedFragment = cartFragment;
             } else if (itemId == R.id.nav_chat) {
                 selectedFragment = new ChatFragment();
             } else if (itemId == R.id.nav_profile) {
