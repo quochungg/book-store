@@ -5,6 +5,7 @@ import com.prm.bookstore.Models.Chat.SendMessageModel;
 import com.prm.bookstore.Models.response.LoginResponse;
 import com.prm.bookstore.Models.response.RegisterResponse;
 import com.prm.bookstore.Models.request.LoginRequest;
+import com.prm.bookstore.Models.Book.Book;
 
 import java.util.List;
 
@@ -40,4 +41,10 @@ public interface ApiService {
 
     @GET("/api/Chat/GetUserChat")
     Call<List<Message>> getUserChat();
+
+    @GET("/api/Book/GetAllBook")
+    Call<java.util.List<Book>> getAllBooks();
+
+    @GET("/api/Book/GetBookById")
+    Call<Book> getBookById(@Query("id") int id);
 }
