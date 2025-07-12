@@ -72,6 +72,8 @@ public class LoginActivity extends AppCompatActivity {
 
                     Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                     intent.putExtra("token", data.getAccessToken());
+                    intent.putExtra("storeId", "c7dd2b3e-1e7c-49c4-ced5-08ddc07ce11b"); // Đúng ID admin
+                    intent.putExtra("userId", data.getUserResponse() != null ? data.getUserResponse().getId() : "");
                     startActivity(intent);
                     finish();
                 } else {
