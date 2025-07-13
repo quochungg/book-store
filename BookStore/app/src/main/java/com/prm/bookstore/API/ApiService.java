@@ -63,4 +63,8 @@ public interface ApiService {
 
     @DELETE("/api/Cart/RemoveCartDetail")
     Call<ResponseBody> removeCartDetail(@Query("bookid") int bookId);
+
+    @GET("api/Cart/CheckCart")
+    Call<Boolean> hasProductInCart();
+
 }

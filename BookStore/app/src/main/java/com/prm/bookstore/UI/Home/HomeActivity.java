@@ -34,9 +34,15 @@ public class HomeActivity extends AppCompatActivity {
             } else if (itemId == R.id.nav_profile) {
                 selectedFragment = new ProfileFragment();
             } else {
-                selectedFragment = new HomeFragment();
-            }
-            getSupportFragmentManager().beginTransaction()
+            String token = getIntent().getStringExtra("token");
+            HomeFragment homeFragment = new HomeFragment();
+            Bundle args = new Bundle();
+            args.putString("token", token);
+            homeFragment.setArguments(args);
+            selectedFragment = homeFragment;
+        }
+
+        getSupportFragmentManager().beginTransaction()
                 .replace(R.id.home_fragment_container, selectedFragment)
                 .commit();
             return true;
