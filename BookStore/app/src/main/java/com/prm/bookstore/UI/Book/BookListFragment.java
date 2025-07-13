@@ -3,6 +3,8 @@ package com.prm.bookstore.UI.Book;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -113,6 +115,16 @@ public class BookListFragment extends Fragment {
 
     private void showCartNotification() {
         if (!isAdded() || getContext() == null) return;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (requireContext().checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                // Gọi xin quyền
+                requestPermissions(new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 2001);
+                return; // Dừng lại, đợi người dùng chọn quyền rồi mới gửi thông báo
+            }
+        }
+
 
         String channelId = "cart_channel_id";
         String channelName = "Cart Notifications";
