@@ -9,12 +9,14 @@ import com.prm.bookstore.Models.Book.Book;
 import com.prm.bookstore.Models.request.AddToCartRequest;
 
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -55,4 +57,10 @@ public interface ApiService {
 
     @GET("/api/Cart/GetUserCart")
     Call<com.prm.bookstore.Models.response.CartViewModel> getUserCart();
+
+    @POST("/api/Payment")
+    Call<ResponseBody> payment(@Body Map<String, String> body);
+
+    @DELETE("/api/Cart/RemoveCartDetail")
+    Call<ResponseBody> removeCartDetail(@Query("bookid") int bookId);
 }

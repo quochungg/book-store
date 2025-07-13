@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="#FFF">
+
+    <!-- Ẩn trường orderType vì giá trị mặc định là 'other' -->
+    <!-- <EditText
+        android:id="@+id/edtOrderType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Loại đơn hàng (orderType)"
+        android:text="other"
+        android:inputType="text" /> -->
+
+    <EditText
+        android:id="@+id/edtAmount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Số tiền (amount)"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/edtOrderDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Mô tả đơn hàng (orderDescription)"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/edtName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tên người nhận (name)"
+        android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/btnPay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Thanh toán"
+        android:backgroundTint="@color/md_theme_light_primary"
+        android:textColor="@color/md_theme_light_onPrimary"
+        android:textSize="18sp"
+        android:layout_marginTop="24dp" />
+
+    <WebView
+        android:id="@+id/webViewPayment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="gone" />
+</LinearLayout>

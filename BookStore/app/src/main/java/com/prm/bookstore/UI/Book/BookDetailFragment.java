@@ -27,6 +27,9 @@ public class BookDetailFragment extends Fragment {
     private static final String ARG_BOOK_ID = "book_id";
     private int bookId;
     private String token;
+    private TextView tvBookName; // Khai báo biến thành viên
+    private int quantity = 1;
+    private TextView tvQuantityDetail;
 
     public static BookDetailFragment newInstance(int bookId, String token) {
         BookDetailFragment fragment = new BookDetailFragment();
@@ -56,14 +59,28 @@ public class BookDetailFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_book_detail, container, false);
         ImageView imgCover = view.findViewById(R.id.imgCover);
-        TextView tvBookName = view.findViewById(R.id.tvBookName);
+        tvBookName = view.findViewById(R.id.tvBookName);
         TextView tvAuthor = view.findViewById(R.id.tvAuthor);
         TextView tvPrice = view.findViewById(R.id.tvPrice);
         TextView tvPreContent = view.findViewById(R.id.tvPreContent);
+        tvQuantityDetail = view.findViewById(R.id.tvQuantityDetail);
+        Button btnIncreaseDetail = view.findViewById(R.id.btnIncreaseDetail);
+        Button btnDecreaseDetail = view.findViewById(R.id.btnDecreaseDetail);
         Button btnAddToCart = view.findViewById(R.id.btnAddToCart);
         loadBookDetail(imgCover, tvBookName, tvAuthor, tvPrice, tvPreContent);
+        tvQuantityDetail.setText(String.valueOf(quantity));
+        btnIncreaseDetail.setOnClickListener(v -> {
+            quantity++;
+            tvQuantityDetail.setText(String.valueOf(quantity));
+        });
+        btnDecreaseDetail.setOnClickListener(v -> {
+            if (quantity > 1) {
+                quantity--;
+                tvQuantityDetail.setText(String.valueOf(quantity));
+            }
+        });
         btnAddToCart.setOnClickListener(v -> {
-            addBookToCart(bookId, 1); // Default quantity is 1
+            addBookToCart(bookId, quantity);
         });
         return view;
     }
@@ -99,27 +116,48 @@ public class BookDetailFragment extends Fragment {
             return;
         }
         ApiService apiService = ApiClient.getAuthenticatedClient(token).create(ApiService.class);
-        com.prm.bookstore.Models.request.AddToCartRequest request = new com.prm.bookstore.Models.request.AddToCartRequest(bookId, quantity);
-        apiService.addBookToCart(request).enqueue(new Callback<ResponseBody>() {
+        // Bước 1: Lấy giỏ hàng hiện tại
+        apiService.getUserCart().enqueue(new Callback<com.prm.bookstore.Models.response.CartViewModel>() {
             @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                Log.d("BookDetailFragment", "AddToCart response: " + response.code());
-                if (response.isSuccessful()) {
-                    String body = "";
-                    try {
-                        body = response.body() != null ? response.body().string() : "";
-                    } catch (Exception e) {
-                        Log.e("BookDetailFragment", "Error reading response body", e);
+            public void onResponse(@NonNull Call<com.prm.bookstore.Models.response.CartViewModel> call, @NonNull Response<com.prm.bookstore.Models.response.CartViewModel> response) {
+                int newQuantity = quantity;
+                if (response.isSuccessful() && response.body() != null && response.body().getCartDetails() != null) {
+                    for (com.prm.bookstore.Models.response.CartDetailViewModel item : response.body().getCartDetails()) {
+                        if (item.getBookName() != null && item.getBookName().equalsIgnoreCase(tvBookName.getText().toString())) {
+                            newQuantity += item.getQuantity();
+                            break;
+                        }
                     }
-                    Toast.makeText(getContext(), "Thêm vào giỏ hàng thành công", Toast.LENGTH_SHORT).show();
-                    Log.d("BookDetailFragment", "AddToCart body: " + body);
-                } else {
-                    Toast.makeText(getContext(), "Thêm vào giỏ hàng thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
                 }
+                // Bước 2: Gửi request với tổng số lượng
+                com.prm.bookstore.Models.request.AddToCartRequest request = new com.prm.bookstore.Models.request.AddToCartRequest(bookId, newQuantity);
+                apiService.addBookToCart(request).enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                        Log.d("BookDetailFragment", "AddToCart response: " + response.code());
+                        if (response.isSuccessful()) {
+                            String body = "";
+                            try {
+                                body = response.body() != null ? response.body().string() : "";
+                            } catch (Exception e) {
+                                Log.e("BookDetailFragment", "Error reading response body", e);
+                            }
+                            Toast.makeText(getContext(), "Thêm vào giỏ hàng thành công", Toast.LENGTH_SHORT).show();
+                            Log.d("BookDetailFragment", "AddToCart body: " + body);
+                        } else {
+                            Toast.makeText(getContext(), "Thêm vào giỏ hàng thất bại: " + response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    @Override
+                    public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                        Log.e("BookDetailFragment", "AddToCart error: " + t.getMessage(), t);
+                        Toast.makeText(getContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
             @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                Log.e("BookDetailFragment", "AddToCart error: " + t.getMessage(), t);
+            public void onFailure(@NonNull Call<com.prm.bookstore.Models.response.CartViewModel> call, @NonNull Throwable t) {
+                Log.e("BookDetailFragment", "Lỗi lấy giỏ hàng: " + t.getMessage(), t);
                 Toast.makeText(getContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

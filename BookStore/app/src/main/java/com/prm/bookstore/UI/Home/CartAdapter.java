@@ -12,9 +12,13 @@ import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
     private List<CartDetailViewModel> cartItems;
+    private CartFragment cartFragment;
+    private String token;
 
-    public CartAdapter(List<CartDetailViewModel> cartItems) {
+    public CartAdapter(List<CartDetailViewModel> cartItems, CartFragment cartFragment, String token) {
         this.cartItems = cartItems;
+        this.cartFragment = cartFragment;
+        this.token = token;
     }
 
     @NonNull
@@ -32,6 +36,34 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         holder.tvTotal.setText("Tổng: " + String.format("%.0fđ", item.getTotal()));
     }
 
+    private void updateCart(CartDetailViewModel item, int newQuantity) {
+        if (token == null) return;
+        com.prm.bookstore.API.ApiService apiService = com.prm.bookstore.API.ApiClient.getAuthenticatedClient(token).create(com.prm.bookstore.API.ApiService.class);
+        com.prm.bookstore.Models.request.AddToCartRequest request = new com.prm.bookstore.Models.request.AddToCartRequest(item.getBookId(), newQuantity);
+        android.util.Log.d("CartAdapter", "UpdateCart request: bookId=" + item.getBookId() + ", quantity=" + newQuantity);
+        apiService.addBookToCart(request).enqueue(new retrofit2.Callback<okhttp3.ResponseBody>() {
+            @Override
+            public void onResponse(retrofit2.Call<okhttp3.ResponseBody> call, retrofit2.Response<okhttp3.ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    // Log response để kiểm tra
+                    try {
+                        String body = response.body() != null ? response.body().string() : "";
+                        android.util.Log.d("CartAdapter", "UpdateCart success: " + body);
+                    } catch (Exception e) {
+                        android.util.Log.e("CartAdapter", "Error reading response body", e);
+                    }
+                } else {
+                    android.util.Log.e("CartAdapter", "UpdateCart failed: " + response.message());
+                }
+                if (cartFragment != null) cartFragment.loadCart();
+            }
+            @Override
+            public void onFailure(retrofit2.Call<okhttp3.ResponseBody> call, Throwable t) {
+                android.util.Log.e("CartAdapter", "UpdateCart error: " + t.getMessage(), t);
+            }
+        });
+    }
+
     @Override
     public int getItemCount() {
         return cartItems.size();
@@ -47,4 +79,3 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         }
     }
 }
-

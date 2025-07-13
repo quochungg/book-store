@@ -36,4 +36,26 @@
         android:gravity="center"
         android:visibility="gone"
         android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/tvTotalAmount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tổng tiền: 0đ"
+        android:textSize="18sp"
+        android:textColor="@color/md_theme_light_primary"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="end"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp" />
+
+    <Button
+        android:id="@+id/btnCheckout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Thanh toán"
+        android:backgroundTint="@color/md_theme_light_primary"
+        android:textColor="@color/md_theme_light_onPrimary"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp" />
 </LinearLayout>
