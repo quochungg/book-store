@@ -31,6 +31,7 @@ public class CartFragment extends Fragment {
     private TextView tvTotalAmount;
     private List<CartDetailViewModel> cartItems = new ArrayList<>();
     private String token;
+    private Button btnCheckout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,11 +48,11 @@ public class CartFragment extends Fragment {
         recyclerViewCart = view.findViewById(R.id.recyclerViewCart);
         tvCartEmpty = view.findViewById(R.id.tvCartEmpty);
         tvTotalAmount = view.findViewById(R.id.tvTotalAmount);
+        btnCheckout = view.findViewById(R.id.btnCheckout);
         cartAdapter = new CartAdapter(cartItems, this, token);
         recyclerViewCart.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewCart.setAdapter(cartAdapter);
         loadCart();
-        Button btnCheckout = view.findViewById(R.id.btnCheckout);
         btnCheckout.setOnClickListener(v -> {
             // Tính tổng tiền
             double totalAmount = 0;
@@ -87,6 +88,7 @@ public class CartFragment extends Fragment {
             tvCartEmpty.setText("Bạn cần đăng nhập để xem giỏ hàng");
             tvCartEmpty.setVisibility(View.VISIBLE);
             recyclerViewCart.setVisibility(View.GONE);
+            btnCheckout.setVisibility(View.GONE);
             return;
         }
         ApiService apiService = ApiClient.getAuthenticatedClient(token).create(ApiService.class);
@@ -99,6 +101,7 @@ public class CartFragment extends Fragment {
                     cartAdapter.notifyDataSetChanged();
                     tvCartEmpty.setVisibility(View.GONE);
                     recyclerViewCart.setVisibility(View.VISIBLE);
+                    btnCheckout.setVisibility(View.VISIBLE);
                     // Tính tổng tiền và hiển thị lên giao diện
                     double totalAmount = 0;
                     for (CartDetailViewModel item : cartItems) {
@@ -110,6 +113,7 @@ public class CartFragment extends Fragment {
                     tvCartEmpty.setVisibility(View.VISIBLE);
                     recyclerViewCart.setVisibility(View.GONE);
                     tvTotalAmount.setText("");
+                    btnCheckout.setVisibility(View.GONE);
                 }
             }
             @Override

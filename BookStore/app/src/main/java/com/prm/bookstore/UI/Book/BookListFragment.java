@@ -92,10 +92,10 @@ public class BookListFragment extends Fragment {
     private void showErrorDialog(String message) {
         if (getContext() == null) return;
         new android.app.AlertDialog.Builder(getContext())
-            .setTitle("Lỗi")
-            .setMessage(message)
-            .setPositiveButton("OK", null)
-            .show();
+                .setTitle("Lỗi")
+                .setMessage(message)
+                .setPositiveButton("OK", null)
+                .show();
     }
 
     private void onBookClick(Book book) {
