@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,9 +33,8 @@ import retrofit2.Response;
 
 public class BookListFragment extends Fragment {
 
-    private RecyclerView recyclerView;
+    private final List<Book> bookList = new ArrayList<>();
     private BookListAdapter adapter;
-    private List<Book> bookList = new ArrayList<>();
     private String token;
 
     @Nullable
@@ -46,7 +44,8 @@ public class BookListFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_book_list, container, false);
 
-        recyclerView = view.findViewById(R.id.recyclerView);
+        // Sử dụng biến cục bộ cho recyclerView
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new BookListAdapter(bookList, this::onBookClick);
         recyclerView.setAdapter(adapter);
@@ -70,19 +69,33 @@ public class BookListFragment extends Fragment {
             @Override
             public void onResponse(Call<List<Book>> call, Response<List<Book>> response) {
                 if (response.isSuccessful() && response.body() != null) {
+                    int oldSize = bookList.size();
                     bookList.clear();
                     bookList.addAll(response.body());
-                    adapter.notifyDataSetChanged();
+                    if (oldSize == 0) {
+                        adapter.notifyItemRangeInserted(0, bookList.size());
+                    } else {
+                        adapter.notifyItemRangeChanged(0, bookList.size());
+                    }
                 } else {
-                    Toast.makeText(getContext(), "Không tải được danh sách sách", Toast.LENGTH_SHORT).show();
+                    showErrorDialog("Không tải được danh sách sách");
                 }
             }
 
             @Override
             public void onFailure(Call<List<Book>> call, Throwable t) {
-                Toast.makeText(getContext(), "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                showErrorDialog("Lỗi kết nối: " + t.getMessage());
             }
         });
+    }
+
+    private void showErrorDialog(String message) {
+        if (getContext() == null) return;
+        new android.app.AlertDialog.Builder(getContext())
+            .setTitle("Lỗi")
+            .setMessage(message)
+            .setPositiveButton("OK", null)
+            .show();
     }
 
     private void onBookClick(Book book) {

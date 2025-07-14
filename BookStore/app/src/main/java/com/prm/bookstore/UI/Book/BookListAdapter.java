@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.prm.bookstore.Models.Book.Book;
 import com.prm.bookstore.R;
 import java.util.List;
+import java.util.Locale;
 
 public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.BookViewHolder> {
     private List<Book> books;
@@ -36,9 +37,14 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.BookVi
         Book book = books.get(position);
         holder.tvBookName.setText(book.getName());
         holder.tvAuthor.setText(book.getAuthor());
-        holder.tvPrice.setText(String.format("%.0fđ", book.getPrice()));
-        // Nếu có ảnh bìa là URL, có thể dùng Glide/Picasso, tạm thời dùng ảnh mặc định
+        holder.tvPrice.setText(String.format(Locale.getDefault(), "%.0fđ", book.getPrice()));
         holder.imgCover.setImageResource(R.drawable.book_1);
+        holder.itemView.setBackgroundResource(R.drawable.card_bg);
+        holder.itemView.setPadding(24, 24, 24, 24);
+        holder.tvBookName.setTextSize(18);
+        holder.tvBookName.setTextColor(0xFF212121);
+        holder.tvAuthor.setTextColor(0xFF757575);
+        holder.tvPrice.setTextColor(0xFF009688);
         holder.itemView.setOnClickListener(v -> listener.onBookClick(book));
     }
 
@@ -47,7 +53,7 @@ public class BookListAdapter extends RecyclerView.Adapter<BookListAdapter.BookVi
         return books.size();
     }
 
-    static class BookViewHolder extends RecyclerView.ViewHolder {
+    public static class BookViewHolder extends RecyclerView.ViewHolder {
         ImageView imgCover;
         TextView tvBookName, tvAuthor, tvPrice;
         public BookViewHolder(@NonNull View itemView) {

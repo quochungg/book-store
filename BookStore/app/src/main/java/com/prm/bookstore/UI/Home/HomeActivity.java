@@ -8,7 +8,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.prm.bookstore.R;
 import com.prm.bookstore.UI.Home.CartFragment;
 import com.prm.bookstore.UI.Home.ChatFragment;
-import com.prm.bookstore.UI.Home.ProfileFragment;
+import com.prm.bookstore.UI.Home.MapFragment;
 import com.prm.bookstore.UI.Home.HomeFragment;
 
 public class HomeActivity extends AppCompatActivity {
@@ -31,20 +31,20 @@ public class HomeActivity extends AppCompatActivity {
                 selectedFragment = cartFragment;
             } else if (itemId == R.id.nav_chat) {
                 selectedFragment = new ChatFragment();
-            } else if (itemId == R.id.nav_profile) {
-                selectedFragment = new ProfileFragment();
+            } else if (itemId == R.id.nav_map) {
+                selectedFragment = new MapFragment();
             } else {
-            String token = getIntent().getStringExtra("token");
-            HomeFragment homeFragment = new HomeFragment();
-            Bundle args = new Bundle();
-            args.putString("token", token);
-            homeFragment.setArguments(args);
-            selectedFragment = homeFragment;
-        }
+                String token = getIntent().getStringExtra("token");
+                HomeFragment homeFragment = new HomeFragment();
+                Bundle args = new Bundle();
+                args.putString("token", token);
+                homeFragment.setArguments(args);
+                selectedFragment = homeFragment;
+            }
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.home_fragment_container, selectedFragment)
-                .commit();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.home_fragment_container, selectedFragment)
+                    .commit();
             return true;
         });
         // Set default fragment
