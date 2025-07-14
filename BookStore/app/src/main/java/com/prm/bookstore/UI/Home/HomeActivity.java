@@ -10,6 +10,7 @@ import com.prm.bookstore.UI.Home.CartFragment;
 import com.prm.bookstore.UI.Home.ChatFragment;
 import com.prm.bookstore.UI.Home.MapFragment;
 import com.prm.bookstore.UI.Home.HomeFragment;
+import com.prm.bookstore.UI.Home.ProfileFragment;
 
 public class HomeActivity extends AppCompatActivity {
     @Override
@@ -33,6 +34,15 @@ public class HomeActivity extends AppCompatActivity {
                 selectedFragment = new ChatFragment();
             } else if (itemId == R.id.nav_map) {
                 selectedFragment = new MapFragment();
+            } else if (itemId == R.id.nav_profile) {
+                String token = getIntent().getStringExtra("token");
+                String userId = getIntent().getStringExtra("userId");
+                ProfileFragment profileFragment = new ProfileFragment();
+                Bundle args = new Bundle();
+                args.putString("token", token);
+                args.putString("userId", userId);
+                profileFragment.setArguments(args);
+                selectedFragment = profileFragment;
             } else {
                 String token = getIntent().getStringExtra("token");
                 HomeFragment homeFragment = new HomeFragment();

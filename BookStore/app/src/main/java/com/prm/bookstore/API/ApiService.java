@@ -67,4 +67,7 @@ public interface ApiService {
     @GET("api/Cart/CheckCart")
     Call<Boolean> hasProductInCart();
 
+    @GET("/api/Account/GetUserInfo")
+    Call<com.prm.bookstore.Models.User.UserInfoResponse> getUserInfo();
+
 }
