@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,7 +32,7 @@ import retrofit2.Retrofit;
 public class ProfileFragment extends Fragment {
 
     private TextView tvUsername, tvEmail, tvUserId, tvUserRole;
-    private Button btnDirections, btnLogout;
+    private View btnDirections, btnLogout;
 
     @Nullable
     @Override
