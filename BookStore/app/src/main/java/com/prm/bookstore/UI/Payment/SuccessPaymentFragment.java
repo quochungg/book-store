@@ -48,7 +48,6 @@ public class SuccessPaymentFragment extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     CartViewModel cart = response.body();
                     if (cart.getCartDetails() != null && !cart.getCartDetails().isEmpty()) {
-                        final StringBuilder resultBuilder = new StringBuilder();
                         final int[] count = {0};
                         final int total = cart.getCartDetails().size();
                         for (CartDetailViewModel item : cart.getCartDetails()) {
@@ -56,29 +55,11 @@ public class SuccessPaymentFragment extends Fragment {
                             apiService.removeCartDetail(item.getBookId()).enqueue(new Callback<ResponseBody>() {
                                 @Override
                                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                    String serverMessage = "";
-                                    try {
-                                        if (response.errorBody() != null) {
-                                            serverMessage = response.errorBody().string();
-                                        }
-                                    } catch (Exception e) {}
-                                    if (response.isSuccessful()) {
-                                        resultBuilder.append("Đã xóa: ").append(item.getBookName()).append("\n");
-                                    } else {
-                                        resultBuilder.append("Xóa thất bại: ").append(item.getBookName()).append(" (status: ").append(response.code()).append(", message: ").append(serverMessage).append(")\n");
-                                    }
-                                    count[0]++;
-                                    if (count[0] == total) {
-                                        Toast.makeText(getContext(), resultBuilder.toString(), Toast.LENGTH_LONG).show();
-                                    }
+                                    // Do nothing, don't show result
                                 }
                                 @Override
                                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                    resultBuilder.append("Lỗi xóa: ").append(item.getBookName()).append(" (" + t.getMessage() + ")\n");
-                                    count[0]++;
-                                    if (count[0] == total) {
-                                        Toast.makeText(getContext(), resultBuilder.toString(), Toast.LENGTH_LONG).show();
-                                    }
+                                    // Do nothing, don't show result
                                 }
                             });
                         }
